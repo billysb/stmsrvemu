@@ -46,6 +46,24 @@ def create_dirs() :
         os.mkdir("files/temp")
     except :
         a = 0
+    # Custom additions.
+    try :
+        os.mkdir("files/custom")
+    except :
+        a = 0
+    try :
+        os.mkdir("files/pkg_add")
+    except :
+        a = 0
+    try :
+        os.mkdir("files/pkg_add/steam")
+    except :
+        a = 0
+    try :
+        os.mkdir("files/pkg_add/steamui")
+    except :
+        a = 0
+    # Custom additions end
     try :
         os.mkdir("files/convert")
     except :

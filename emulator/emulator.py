@@ -41,7 +41,11 @@ update_exception1 = ""
 update_exception2 = ""
 clear_config = False
 
-mod_date_emu = os.path.getmtime("emulator.exe")
+try:
+    mod_date_emu = os.path.getmtime("emulator.exe")
+except:
+    # We fake this value because we just wanna run this.
+    mod_date_emu = 0
 try:
     mod_date_cach = os.path.getmtime("files/cache/emulator.ini.cache")
 except:
@@ -62,6 +66,11 @@ if (mod_date_cach < mod_date_emu) and clear_config == True:
 
 config = read_config()
 
+print("Disable Windows Auto Update and Built in Webserver.")
+print("Setting up your own webserver is recommended for linux.")
+config["emu_auto_update"] = "no"
+config["use_webserver"] = "false"
+
 dirs.create_dirs()
 
 print
@@ -69,6 +78,7 @@ print("Steam 2003-2011 Server Emulator v" + local_ver)
 print(("=" * 33) + ("=" * len(local_ver)))
 print
 print(" -== Steam 20th Anniversary Edition 2003-2023 ==-")
+print("              ALTERED FOR LINUX                  ")
 print
 
 if not config["emu_auto_update"] == "no":
@@ -226,21 +236,21 @@ try:
 except:
     log.debug("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
     print("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
     quit()
 try:
     socket.inet_aton(config["public_ip"])
 except:
     log.debug("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
     print("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
     quit()
 try:
     socket.inet_aton(config["community_ip"])
 except:
     log.debug("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
     print("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
     quit()
     
 server_ip_fail = False
@@ -248,7 +258,7 @@ counts=Counter(config["server_ip"])
 if not counts['.'] == 3:
     log.debug("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
     print("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
     quit()
 for char in config["server_ip"]:
     if not (char >= '0' and char <= '9' or char == '.'):
@@ -256,7 +266,7 @@ for char in config["server_ip"]:
 if server_ip_fail == True:
     log.debug("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
     print("ERROR! The server ip is malformed, currently %s" % (config["server_ip"]))
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
     quit()
 
 if config["public_ip"] != "0.0.0.0" :
@@ -265,7 +275,7 @@ if config["public_ip"] != "0.0.0.0" :
     if not counts['.'] == 3:
         log.debug("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
         print("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
-        raw_input("Press Enter to exit...")
+        #raw_input("Press Enter to exit...")
         quit()
     for char in config["public_ip"]:
         if not (char >= '0' and char <= '9' or char == '.'):
@@ -273,7 +283,7 @@ if config["public_ip"] != "0.0.0.0" :
     if public_ip_fail == True:
         log.debug("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
         print("ERROR! The public ip is malformed, currently %s" % (config["public_ip"]))
-        raw_input("Press Enter to exit...")
+        #raw_input("Press Enter to exit...")
         quit()
 
 if config["community_ip"] != "0.0.0.0" :
@@ -282,7 +292,7 @@ if config["community_ip"] != "0.0.0.0" :
     if not counts['.'] == 3:
         log.debug("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
         print("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
-        raw_input("Press Enter to exit...")
+        #raw_input("Press Enter to exit...")
         quit()
     for char in config["community_ip"]:
         if not (char >= '0' and char <= '9' or char == '.'):
@@ -290,7 +300,7 @@ if config["community_ip"] != "0.0.0.0" :
     if public_ip_fail == True:
         log.debug("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
         print("ERROR! The community ip is malformed, currently %s" % (config["community_ip"]))
-        raw_input("Press Enter to exit...")
+        #raw_input("Press Enter to exit...")
         quit()
 
 log.info("...Starting Steam Server...")
@@ -408,7 +418,7 @@ class udplistener(threading.Thread):
                         vallist[4] = str(int(message[32:34], base=16))
                         vallist[5] = str(int(message[34:36], base=16))
                         vallist[6] = str(int(message[36:38], base=16))
-                        f = open("clientstats\\" + str(ipactual) + ".steamexe.csv", "w")
+                        f = open("clientstats/" + str(ipactual) + ".steamexe.csv", "w")
                         f.write(str(binascii.a2b_hex(message[6:24])))
                         f.write("\n")
                         f.write(keylist[0] + "," + keylist[1] + "," + keylist[2] + "," + keylist[3] + "," + keylist[4] + "," + keylist[5] + "," + keylist[6])
@@ -453,7 +463,7 @@ class udplistener(threading.Thread):
                         vallist[10] = str(int(binascii.b2a_hex(templist2[15]), base=16))
                         vallist[11] = str(int(binascii.b2a_hex(templist2[18]), base=16))
                         vallist[12] = str(templist2[23])
-                        f = open("crashlogs\\" + str(ipactual) + ".csv", "w")
+                        f = open("crashlogs/" + str(ipactual) + ".csv", "w")
                         f.write("SteamExceptionsData")
                         f.write("\n")
                         f.write(keylist[0] + "," + keylist[1] + "," + keylist[2] + "," + keylist[3] + "," + keylist[4] + "," + keylist[5] + "," + keylist[6] + "," + keylist[7] + "," + keylist[8] + "," + keylist[9] + "," + keylist[10] + "," + keylist[11] + "," + keylist[12])
@@ -587,14 +597,24 @@ else :
     f = open(config["packagedir"] + "Steam_" + str(globalvars.steam_ver) + ".pkg", "rb")
 pkg = Package(f.read())
 f.close()
-shutil.rmtree("client")
+
+# Don't remove client folder because users may use this for testing / configuration purposes.
+# Not our fault if it causes the user issues.
+
+#shutil.rmtree("client")
 #os.mkdir("client")
 dirs.create_dirs()
 file = pkg.get_file("SteamNew.exe")
 file2 = pkg.get_file("SteamNew.exe")
 if config["public_ip"] != "0.0.0.0" :
-    os.mkdir("client/lan")
-    os.mkdir("client/wan")
+    try :
+        os.mkdir("client/lan")
+    except :
+        a = 0
+    try:
+        os.mkdir("client/wan")
+    except :
+        a = 0
     file = neuter_file(file, config["public_ip"], config["dir_server_port"], "SteamNew.exe", "wan")
     file2 = neuter_file(file2, config["server_ip"], config["dir_server_port"], "SteamNew.exe", "lan")
     f = open("client/wan/Steam.exe", "wb")
@@ -896,7 +916,8 @@ if config["enable_steam3_servers"] == "1":
 else:
     if globalvars.record_ver == 1 :
         globalvars.tracker = 1
-        subprocess.Popen("trackerserver.exe")
+        # This needs to be tested.
+        subprocess.Popen("trackerserver.bin")
         log.info("Started TRACKER server on port 1200")
     else :
         log.info("TRACKER unsupported on release client, not started")

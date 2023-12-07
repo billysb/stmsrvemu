@@ -13,11 +13,11 @@ logtofile = config["log_to_file"]
 #INFO
 #DEBUG
 #NOTSET
-fh = logging.handlers.RotatingFileHandler('logs\\emulator_debug.log', maxBytes=20000000, backupCount=10)
+fh = logging.handlers.RotatingFileHandler('logs/emulator_debug.log', maxBytes=20000000, backupCount=10)
 fh.setLevel(logging.DEBUG)
-fh2 = logging.handlers.RotatingFileHandler('logs\\emulator_info.log', maxBytes=20000000, backupCount=5)
+fh2 = logging.handlers.RotatingFileHandler('logs/emulator_info.log', maxBytes=20000000, backupCount=5)
 fh2.setLevel(logging.INFO)
-er = logging.handlers.RotatingFileHandler('logs\\emulator_error.log', maxBytes=20000000, backupCount=2)
+er = logging.handlers.RotatingFileHandler('logs/emulator_error.log', maxBytes=20000000, backupCount=2)
 er.setLevel(logging.WARNING)
 ch = logging.StreamHandler(sys.stdout)
 if loglevel == "logging.DEBUG" :
