@@ -47,7 +47,8 @@ def decodeIP(string) :
     ip = "%d.%d.%d.%d" % (oct1, oct2, oct3, oct4)
     return ip, port
 
-def encodeIP((ip, port)) :
+def encodeIP(theargs) :
+    ip, port = theargs # Nuitka compiler fix
     if type(port) == str :
         port = int(port)
     oct = ip.split(".")
